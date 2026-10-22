@@ -69,7 +69,63 @@ p.write_text(s)
 PY
 }
 
-for d in difficulty_1 difficulty_2 difficulty_3; do
+# D4：地球相对恒星转一圈是一个恒星日（约 86164.1 s），角速度约 7.2921e-5 rad/s；
+# 7.2722e-5 是 2π/86400，即按太阳日算，三天少转约 3 度。直接用恒星时公式按时刻求地球朝向。
+fix_difficulty_4() {
+  "$PY" - <<'PY'
+from pathlib import Path
+p = Path("/app/orbit_predict.py")
+s = p.read_text()
+old = "x, y, z = eci_to_ecef(r, theta0 + EARTH_RATE * t)"
+new = "x, y, z = eci_to_ecef(r, gmst(jd0 + t / 86400.0))"
+assert old in s
+s = s.replace(old, new)
+s = s.replace('theta0 = gmst(julian_day(*parse_utc(sat["epoch_utc"])))', 'jd0 = julian_day(*parse_utc(sat["epoch_utc"]))')
+s = s.replace("from orbit.constants import EARTH_RATE\n", "")
+p.write_text(s)
+PY
+}
+
+# D5：Meeus 的儒略日公式要求 1、2 月当作上一年的 13、14 月，否则这两个月的日期
+# 会差 1 到 3 天，恒星时差 1 到 3 度。
+fix_difficulty_5() {
+  "$PY" - <<'PY'
+from pathlib import Path
+p = Path("/app/orbit/timescale.py")
+s = p.read_text()
+old = """    a = year // 100
+"""
+new = """    if month <= 2:
+        year -= 1
+        month += 12
+    a = year // 100
+"""
+assert old in s
+p.write_text(s.replace(old, new, 1))
+PY
+}
+
+# D6：大地纬度迭代 tanφ = (z + e²·N·sinφ)/p 里要用第一偏心率的平方 e² = f(2 - f)，
+# 不是扁率 f；用 f 时中纬度低轨星下点纬度差约 0.1 度。
+fix_difficulty_6() {
+  "$PY" - <<'PY'
+from pathlib import Path
+p = Path("/app/orbit/geodesy.py")
+s = p.read_text()
+old1 = "    lat = math.atan2(z, p)\n"
+new1 = "    e2 = FLATTENING * (2.0 - FLATTENING)\n    lat = math.atan2(z, p)\n"
+old2 = "n = R_EARTH / math.sqrt(1.0 - FLATTENING * s * s)"
+new2 = "n = R_EARTH / math.sqrt(1.0 - e2 * s * s)"
+old3 = "lat = math.atan2(z + FLATTENING * n * s, p)"
+new3 = "lat = math.atan2(z + e2 * n * s, p)"
+for a, b in ((old1, new1), (old2, new2), (old3, new3)):
+    assert a in s, a
+    s = s.replace(a, b)
+p.write_text(s)
+PY
+}
+
+for d in difficulty_1 difficulty_2 difficulty_3 difficulty_4 difficulty_5 difficulty_6; do
   if [ "$SKIP" = "$d" ]; then
     echo "留一法：跳过 $d" >&2
     continue

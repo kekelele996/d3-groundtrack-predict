@@ -4,8 +4,8 @@ artifacts = []
 [task]
 name = "local/d3-groundtrack-predict"
 version = "1.0.0"
-description = "修正卫星位置预报工具中的高度换算、地心引力常数取值和轨道外推方法"
-keywords = ["orbital mechanics", "kepler equation", "two-body propagation", "python"]
+description = "修正卫星位置与星下点预报工具中的轨道要素换算、引力常数、轨道外推、地球自转角、儒略日和大地纬度计算"
+keywords = ["orbital mechanics", "kepler equation", "sidereal time", "geodetic latitude", "ground track", "python"]
 [[task.authors]]
 name = "高博"
 
@@ -14,8 +14,8 @@ author_name = "高博"
 author_email = "unknown"
 difficulty = "expert"
 category = "physics-simulation"
-tags = ["physics", "orbital-mechanics", "numerical-methods"]
-expert_time_estimate_min = 240
+tags = ["physics", "orbital-mechanics", "geodesy", "numerical-methods"]
+expert_time_estimate_min = 360
 junior_time_estimate_min = 0.0
 
 [verifier]

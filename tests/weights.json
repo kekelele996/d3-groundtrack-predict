@@ -1,5 +1,8 @@
 {
-  "difficulty_1": 0.3,
-  "difficulty_2": 0.3,
-  "difficulty_3": 0.4
+  "difficulty_1": 0.15,
+  "difficulty_2": 0.15,
+  "difficulty_3": 0.2,
+  "difficulty_4": 0.15,
+  "difficulty_5": 0.2,
+  "difficulty_6": 0.15
 }
