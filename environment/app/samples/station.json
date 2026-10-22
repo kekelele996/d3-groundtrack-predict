@@ -1,0 +1,24 @@
+{
+  "satellites": [
+    {
+      "id": "STATION-A",
+      "perigee_alt_km": 413.0,
+      "apogee_alt_km": 421.0,
+      "inclination_deg": 51.64,
+      "raan_deg": 247.46,
+      "arg_perigee_deg": 130.54,
+      "mean_anomaly_deg": 325.03,
+      "times_s": [0, 5400, 86400, 172800, 259200]
+    },
+    {
+      "id": "SSO-B",
+      "perigee_alt_km": 690.0,
+      "apogee_alt_km": 712.0,
+      "inclination_deg": 98.2,
+      "raan_deg": 31.0,
+      "arg_perigee_deg": 88.0,
+      "mean_anomaly_deg": 272.0,
+      "times_s": [0, 3600, 43200, 129600, 259200]
+    }
+  ]
+}
